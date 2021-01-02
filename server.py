@@ -29,13 +29,13 @@ def get_state():
     hour = time_now.hour
 
     if 0 <= hour <= 7:
-        return night
+        return night["actions"], night['p']
     elif 12 >= hour >= 8:
-        return morning
+        return morning["actions"], morning['p']
     elif 13 <= hour <= 17:
-        return day_peak
+        return day_peak["actions"], day_peak['p']
     elif 18 <= hour <= 23:
-        return evening
+        return evening["actions"], evening['p']
 
 
 @app.get("/")
@@ -51,7 +51,7 @@ def parking():
         if station["AvailableOrdinaryBikes"] <= station["TotalOrdinaryPlaces"]:
             actions, p = get_state()
             station["AvailableOrdinaryBikes"] = station["AvailableOrdinaryBikes"] + int(
-                numpy.random.choice(actions, p))
+                numpy.random.choice(actions, p=p))
         if station["AvailableOrdinaryBikes"] < 0:
             station["AvailableOrdinaryBikes"] = 0
         elif station["AvailableOrdinaryBikes"] > station["TotalOrdinaryPlaces"]:
